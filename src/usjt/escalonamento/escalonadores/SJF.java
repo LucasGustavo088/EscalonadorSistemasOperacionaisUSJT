@@ -117,4 +117,5 @@ public class SJF extends Escalonador {
     public String toString() {
         return String.format("%s (%s)", getClass().getSimpleName(), this.preemptivo ? "preempitivo" : "não-preemptivo");
     }
+
 }

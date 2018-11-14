@@ -77,6 +77,7 @@ public class CSVUtil {
 
         int tempoEntrada;
         int tempoExecucao;
+        int TempoExecucaoEstatico;
         int prioridade;
 
         int i;
@@ -92,9 +93,10 @@ public class CSVUtil {
 
                     tempoEntrada = Integer.valueOf(campos[1]);
                     tempoExecucao = Integer.valueOf(campos[2]);
+                    TempoExecucaoEstatico = tempoExecucao;
                     prioridade = Integer.valueOf(campos[3]);
 
-                    processo = new Processo(campos[0], tempoExecucao, prioridade, tempoEntrada);
+                    processo = new Processo(campos[0], tempoExecucao, prioridade, tempoEntrada, TempoExecucaoEstatico);
                     processos.add(processo);
 
                 }

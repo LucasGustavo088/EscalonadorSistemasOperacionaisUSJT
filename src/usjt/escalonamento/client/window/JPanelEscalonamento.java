@@ -24,6 +24,7 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
     protected Window          window           = null;
     protected Escalonador     escalonador      = null;
     protected boolean         executando       = false;
+    protected char[][] 		  memoria; 		  
 
     /**
      * Abre uma Thread para a execução do escalonador
@@ -46,6 +47,7 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
         Color fg = null;
         List<JLabel> labels = null;
         JLabel label = null;
+        
 
         this.executando = true;
 
@@ -53,6 +55,8 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
         for (Processo p : this.escalonador.getProcessos()) {
             this.tempoTotal += p.getTempoExecucao();
         }
+        
+        memoria = new char[this.tempoTotal][100];
 
         ((GridLayout) this.getLayout()).setColumns(this.tempoTotal);
 
@@ -78,8 +82,80 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
                     Thread.sleep(this.tempoMili);
 
                 escalonador.passaTempo();
-
+                
                 if (escalonador.getCorrente() != null) {
+                	if(escalonador.getTempoAtual() != 0 && escalonador.getTempoAtual() != this.tempoTotal) {
+                		for(int i = 0; i < 100; i++) {
+                			this.memoria[escalonador.getTempoAtual()][i] = this.memoria[escalonador.getTempoAtual() - 1][i];
+                		}
+                		
+                	}
+                	
+                	//Retirando processos não prontos
+                	for(int i = 0; i < 100; i++) {
+                		
+                		char c = this.memoria[escalonador.getTempoAtual()][i];
+                		boolean naoAchou = true;
+                		for(Processo pronto : this.escalonador.getProntos()) {
+                			if(c == pronto.getNome().charAt(0)) {
+                				naoAchou = false;
+                			}
+                		}
+                		
+                		if(naoAchou) {
+                			this.memoria[escalonador.getTempoAtual()][i] = 0;
+                		}
+            		}
+                	
+                	for(Processo pronto : this.escalonador.getProntos()) {
+                		//Verificando se o processo ja está no array
+                		boolean achouProcessoNaLinha = false;
+                		for(int i = 0; i < 100; i++) {
+                    		if(pronto.getNome().charAt(0) == this.memoria[escalonador.getTempoAtual()][i]) {
+                    			achouProcessoNaLinha = true;
+                    		}
+                		}
+                		
+                		if(achouProcessoNaLinha) {
+                			continue;
+                		}
+                		
+                		int unidadeMemoriaAtual = 0;
+                    	int unidadeMemoriaAtualAte = 0;
+                    	int espacoNecessarioAchado = 0;
+                    	boolean achouEspaco = false;
+                    	
+                    	for(unidadeMemoriaAtual = 0; unidadeMemoriaAtual < 100; unidadeMemoriaAtual++) {
+                    		
+                    		if(this.memoria[this.escalonador.getTempoAtual()][unidadeMemoriaAtual] != 0) {
+                    			continue;
+                    		}
+                    		
+                    		for(unidadeMemoriaAtualAte = unidadeMemoriaAtual; unidadeMemoriaAtualAte < unidadeMemoriaAtual + pronto.getTempoExecucaoEstatico() && unidadeMemoriaAtualAte < 100; unidadeMemoriaAtualAte++) {
+                    			if(this.memoria[this.escalonador.getTempoAtual()][unidadeMemoriaAtualAte] == 0) {
+                    				espacoNecessarioAchado++;
+                    			}
+                    			
+                    			if(espacoNecessarioAchado == pronto.getTempoExecucaoEstatico()) {
+                    				achouEspaco = true;
+                    				break;
+                    			}
+                    		}
+                    		
+                    		if(achouEspaco == true) {
+                    			break;
+                    		}
+                    		
+                    	}                	
+                    	
+                    	if(achouEspaco) {
+                    		for(int i = unidadeMemoriaAtual; i <= unidadeMemoriaAtualAte; i++) {
+                    			this.memoria[this.escalonador.getTempoAtual()][i] = pronto.getNome().charAt(0);
+                    		}
+                    	}
+                	}
+                	
+                	
                     bg = this.window.getColorOfProcesso(this.escalonador
                                     .getCorrente());
                     fg = new Color(255 - bg.getRed(), 255 - bg.getGreen(), 255 - bg
@@ -94,7 +170,8 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
                     this.updateUI();
                 }
             }
-
+            this.window.memoriaFuncionando = this.memoria;
+            
             this.window.fimEscalonamento();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -142,5 +219,17 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
         setBorder(javax.swing.BorderFactory
                         .createLineBorder(new java.awt.Color(0, 0, 0)));
         setLayout(new GridLayout(1, 100));
+    }
+    
+    public void printMemoria()
+    {
+       for(int i = 0; i < this.escalonador.getTempoAtual(); i++)
+       {
+          for(int j = 0; j < 100; j++)
+          {
+             System.out.print(this.memoria[i][j]);
+          }
+          System.out.println();
+       }
     }
 }

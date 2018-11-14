@@ -64,6 +64,8 @@ public abstract class Window extends JFrame {
     protected JTableProcesso      tbProcessos;
 
     protected List<Color>         colors           = new ArrayList<Color>();
+    
+    protected char[][] 		  memoriaFuncionando; 	
 
     /**
      * Create the application.

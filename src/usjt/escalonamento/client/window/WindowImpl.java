@@ -75,7 +75,7 @@ public class WindowImpl extends Window {
         arquivo = this.txArquivo.getText();
 
         if (arquivo.equals(""))
-            arquivo = "resources/processos.csv";
+            arquivo = "C:/Users/lucas/eclipse-workspace/EscalonadorUSJT2/resources/sistemas_operacionais_bestfit.csv";
 
         JFileChooser jfc = new JFileChooser(new File(arquivo));
         jfc.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
@@ -117,6 +117,8 @@ public class WindowImpl extends Window {
             
             this.pnExecucao.start(escalonador, Integer.parseInt(this.txTempo
                             .getText().replace(".", "")));
+            this.pnMemoria.start(escalonador, Integer.parseInt(this.txTempo
+                    .getText().replace(".", "")));
         } else {
             this.pnExecucao.stop();
         }

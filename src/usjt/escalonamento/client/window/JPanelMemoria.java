@@ -34,7 +34,7 @@ public class JPanelMemoria extends JPanel implements Runnable {
      *            Tempo de espera entre os "tempos"
      */
     public void start(Escalonador escalonador, int tempoMili) {
-        this.thread = new Thread(this, "thread_escalonador");
+        this.thread = new Thread(this, "memoria");
         this.escalonador = escalonador;
         this.tempoMili = tempoMili;
         this.thread.start();
@@ -44,23 +44,12 @@ public class JPanelMemoria extends JPanel implements Runnable {
     public void run() {
         Color bg = null;
         Color fg = null;
-        List<JLabel> labels = null;
+        
         JLabel label = null;
-
-        this.executando = true;
-
-        this.tempoTotal = 0;
-        for (Processo p : this.escalonador.getProcessos()) {
-            this.tempoTotal += p.getTempoExecucao();
-        }
-
-        ((GridLayout) this.getLayout()).setColumns(this.tempoTotal);
-
-        this.removeAll();
-
+        List<JLabel> labels = null;
         labels = new ArrayList<JLabel>();
-
-        for (int i = 0; i < this.tempoTotal; i++) {
+        
+        for (int i = 0; i < 100; i++) {
             label = new JLabel(String.format("%5d", i));
             label.setOpaque(true);
             label.setBackground(this.getBackground());
@@ -70,37 +59,35 @@ public class JPanelMemoria extends JPanel implements Runnable {
             labels.add(label);
         }
 
-        this.updateUI();
+        this.executando = true;
 
-        try {
-            while (!this.escalonador.isTerminado() && this.executando) {
-                if (this.tempoMili > 0)
-                    Thread.sleep(this.tempoMili);
-
-                escalonador.passaTempo();
-
-                if (escalonador.getCorrente() != null) {
-                    bg = this.window.getColorOfProcesso(this.escalonador
-                                    .getCorrente());
-                    fg = new Color(255 - bg.getRed(), 255 - bg.getGreen(), 255 - bg
-                                    .getBlue());
-
-                    label = labels.get(this.escalonador.getTempoAtual());
-                    label.setBackground(bg);
-                    label.setForeground(fg);
-                    
-                    // rola até o label
-                    this.scrollRectToVisible(label.getBounds());
-                    this.updateUI();
-                }
-            }
-
-            this.window.fimEscalonamento();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            this.executando = false;
+        this.tempoTotal = 0;
+        for (Processo p : this.escalonador.getProcessos()) {
+            this.tempoTotal += p.getTempoEmEspera();
         }
+
+        int[][] valoresMemoria = this.obterValoresMemoriaSJF(this.tempoTotal, this.escalonador.getProcessos());
+
+        	this.updateUI();
+
+            label = labels.get(0);
+            label.setBackground(new Color(255, 255, 255));
+            label.setForeground(fg);
+            
+            // rola até o label
+            this.scrollRectToVisible(label.getBounds());
+            this.updateUI();
+    }
+    
+    public int[][] obterValoresMemoriaSJF(int tempoTotal, List<Processo> processos) {
+    	int[][] multi = new int[tempoTotal][100];
+    	
+    	boolean preemptivo = this.escalonador.isPreemptivo();
+;    	for(int linha = 0; linha < tempoTotal; linha++) {
+    		
+    	}
+    	
+    	return multi;
     }
 
     /**
@@ -144,17 +131,6 @@ public class JPanelMemoria extends JPanel implements Runnable {
         setLayout(new GridLayout(1, 100));
         ((GridLayout) this.getLayout()).setColumns(this.tempoTotal);
         
-        JLabel label = null;
-        List<JLabel> labels = null;
         
-        for (int i = 0; i < 100; i++) {
-            label = new JLabel(String.format("%5d", i));
-            label.setOpaque(true);
-            label.setBackground(this.getBackground());
-            label.setForeground(this.getBackground());
-            label.setBorder(new LineBorder(Color.black, 1));
-            this.add(label);
-            //labels.add(label);
-        }
     }
 }

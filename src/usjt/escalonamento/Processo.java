@@ -6,6 +6,7 @@ package usjt.escalonamento;
 public class Processo {
     private String nome;
     private int    tempoExecucao;
+    private int    tempoExecucaoEstatico;
     private int    prioridade;
     private int    tempoEntrada  = 0;
     private int    tempoEmEspera = 0;
@@ -40,9 +41,10 @@ public class Processo {
      *            Momento em que o processo entra no sistema
      */
     public Processo(String nome, int tempoExecucao, int prioridade,
-                    int tempoEntrada) {
+                    int tempoEntrada, int tempoExecucaoEstatico) {
         this(nome, tempoExecucao, prioridade);
         this.tempoEntrada = tempoEntrada;
+        this.tempoExecucaoEstatico = tempoExecucaoEstatico;
     }
 
     /**
@@ -88,6 +90,15 @@ public class Processo {
      */
     public int getPrioridade() {
         return prioridade;
+    }
+    
+    /**
+     * Retorna o tempo de execução.
+     * 
+     * @return
+     */
+    public int getTempoExecucaoEstatico() {
+        return tempoExecucaoEstatico;
     }
 
     /**
