@@ -24,7 +24,8 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
     protected Window          window           = null;
     protected Escalonador     escalonador      = null;
     protected boolean         executando       = false;
-    protected char[][] 		  memoria; 		  
+    protected char[][] 		  memoria; 		
+    protected char[][]		  filaMemoria;
 
     /**
      * Abre uma Thread para a execução do escalonador
@@ -57,7 +58,8 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
         }
         
         memoria = new char[this.tempoTotal][100];
-
+        filaMemoria = new char[this.tempoTotal][100];
+        
         ((GridLayout) this.getLayout()).setColumns(this.tempoTotal);
 
         this.removeAll();
@@ -75,7 +77,7 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
         }
 
         this.updateUI();
-
+        
         try {
             while (!this.escalonador.isTerminado() && this.executando) {
                 if (this.tempoMili > 0)
@@ -152,6 +154,10 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
                     		for(int i = unidadeMemoriaAtual; i <= unidadeMemoriaAtualAte; i++) {
                     			this.memoria[this.escalonador.getTempoAtual()][i] = pronto.getNome().charAt(0);
                     		}
+                    	} else {
+                    		for(int i = 0; i < 100; i++) {
+                    			this.filaMemoria[this.escalonador.getTempoAtual()][i] = pronto.getNome().charAt(0);
+                    		}                    		
                     	}
                 	}
                 	
@@ -171,7 +177,8 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
                 }
             }
             this.window.memoriaFuncionando = this.memoria;
-            
+            System.out.println("Memória");
+            printVetor(this.window.memoriaFuncionando);
             this.window.fimEscalonamento();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -221,13 +228,18 @@ public class JPanelEscalonamento extends JPanel implements Runnable {
         setLayout(new GridLayout(1, 100));
     }
     
-    public void printMemoria()
+    public void printVetor(char[][] vetor)
     {
        for(int i = 0; i < this.escalonador.getTempoAtual(); i++)
        {
           for(int j = 0; j < 100; j++)
-          {
-             System.out.print(this.memoria[i][j]);
+          {	
+        	  char c = vetor[i][j];
+        	  if(c == 0) {
+        		  c = '-';
+        	  }
+        	  
+             System.out.print(c);
           }
           System.out.println();
        }

@@ -67,7 +67,9 @@ public class JPanelMemoria extends JPanel implements Runnable {
         }
 
         char[][] valoresMemoria = this.window.memoriaFuncionando;
-
+        
+        //printVetor(valoresMemoria);
+        
         	this.updateUI();
         	
         //for(int linha = 0; linha < this.tempoTotal; linha++) {
@@ -139,5 +141,23 @@ public class JPanelMemoria extends JPanel implements Runnable {
         ((GridLayout) this.getLayout()).setColumns(this.tempoTotal);
         
         
+        
+    }
+    
+    public void printVetor(char[][] vetor)
+    {
+       for(int i = 0; i < this.escalonador.getTempoAtual(); i++)
+       {
+          for(int j = 0; j < 100; j++)
+          {	
+        	  char c = vetor[i][j];
+        	  if(c == 0) {
+        		  c = '-';
+        	  }
+        	  
+             System.out.print(c);
+          }
+          System.out.println();
+       }
     }
 }

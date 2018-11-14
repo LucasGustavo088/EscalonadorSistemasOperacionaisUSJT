@@ -66,6 +66,7 @@ public abstract class Window extends JFrame {
     protected List<Color>         colors           = new ArrayList<Color>();
     
     protected char[][] 		  memoriaFuncionando; 	
+    protected char[][] 		  filaMemoriaFuncionando;
 
     /**
      * Create the application.
