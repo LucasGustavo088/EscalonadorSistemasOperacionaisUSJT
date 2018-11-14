@@ -54,7 +54,7 @@ public class JPanelMemoria extends JPanel implements Runnable {
             label.setOpaque(true);
             label.setBackground(this.getBackground());
             label.setForeground(this.getBackground());
-            label.setBorder(new LineBorder(Color.black, 1));
+            label.setBorder(new LineBorder(Color.green, 1));
             this.add(label);
             labels.add(label);
         }
@@ -66,13 +66,20 @@ public class JPanelMemoria extends JPanel implements Runnable {
             this.tempoTotal += p.getTempoEmEspera();
         }
 
-        int[][] valoresMemoria = this.obterValoresMemoriaSJF(this.tempoTotal, this.escalonador.getProcessos());
+        char[][] valoresMemoria = this.window.memoriaFuncionando;
 
         	this.updateUI();
-
-            label = labels.get(0);
-            label.setBackground(new Color(255, 255, 255));
-            label.setForeground(fg);
+        	
+        //for(int linha = 0; linha < this.tempoTotal; linha++) {
+        	for(int i = 0; i < 100; i++) {
+        		label = labels.get(i);
+                label.setBackground(new Color(255, 255, 255));
+        		label.setText(String.valueOf(valoresMemoria[0][i]));
+                label.setBackground(fg);
+        	}
+        	
+        //}
+            
             
             // rola até o label
             this.scrollRectToVisible(label.getBounds());
