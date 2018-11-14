@@ -57,6 +57,9 @@ public abstract class Window extends JFrame {
 
     private JScrollPane           scrllExecucao;
     protected JPanelEscalonamento pnExecucao;
+    
+    private JScrollPane 		  scrllMemoria;
+    protected JPanelMemoria 	  pnMemoria;
 
     protected JTableProcesso      tbProcessos;
 
@@ -108,29 +111,43 @@ public abstract class Window extends JFrame {
                                         .addContainerGap()
                                         .addComponent(pnContainer, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
                                         .addContainerGap()));
-
+        
+        
         pnParams = new JPanel();
         pnParams.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-
+        
+        //Escalonador
         JScrollPane scrllTable = new JScrollPane();
-
+        
         scrllExecucao = new JScrollPane();
+        scrllMemoria = new JScrollPane();
+        
         GroupLayout gl_pnContainer = new GroupLayout(pnContainer);
         gl_pnContainer.setHorizontalGroup(gl_pnContainer
                         .createParallelGroup(Alignment.LEADING)
                         .addComponent(pnParams, GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
                         .addComponent(scrllTable, GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
-                        .addComponent(scrllExecucao, GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE));
+                        .addComponent(scrllExecucao, GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
+                        .addComponent(scrllMemoria, GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE));
+        
         gl_pnContainer.setVerticalGroup(gl_pnContainer
                         .createParallelGroup(Alignment.LEADING)
                         .addGroup(gl_pnContainer
                                         .createSequentialGroup()
                                         .addComponent(pnParams, GroupLayout.PREFERRED_SIZE, 106, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addPreferredGap(ComponentPlacement.RELATED)
+                                        .addComponent(scrllTable, GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
                                         .addComponent(scrllExecucao, GroupLayout.PREFERRED_SIZE, 47, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(scrllTable, GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)));
-
+                                        .addComponent(scrllMemoria, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)));
+        
+        //Memória
+        pnMemoria = new JPanelMemoria();
+        scrllMemoria.setViewportView(pnMemoria);
+        pnMemoria.setWindow(this);
+        
+        //Escalonador
         pnExecucao = new JPanelEscalonamento();
         scrllExecucao.setViewportView(pnExecucao);
         pnExecucao.setWindow(this);
@@ -141,7 +158,7 @@ public abstract class Window extends JFrame {
         lbArquivo = new JLabel("Arquivo:");
 
         txArquivo = new JTextField();
-        txArquivo.setText("resources/processos.csv");
+        txArquivo.setText("C:/Users/lucas/eclipse-workspace/EscalonadorUSJT2/resources");
         txArquivo.setEditable(false);
         txArquivo.setColumns(10);
 
@@ -172,7 +189,7 @@ public abstract class Window extends JFrame {
         cmbAlgoritmos.setModel(new DefaultComboBoxModel<String>(new String[] {"SJF"}));
 
         chPreemptivo = new JCheckBox("Preemptivo");
-        chPreemptivo.setEnabled(false);
+        chPreemptivo.setEnabled(true);
 
         lbQuantum = new JLabel("Quantum:");
 
@@ -262,8 +279,9 @@ public abstract class Window extends JFrame {
                     .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         gl_pnParams.linkSize(SwingConstants.HORIZONTAL, new Component[] {btCarregar, btExecutar});
-        pnParams.setLayout(gl_pnParams);
         pnContainer.setLayout(gl_pnContainer);
+        pnParams.setLayout(gl_pnParams);
+        
         getContentPane().setLayout(groupLayout);
     }
 }

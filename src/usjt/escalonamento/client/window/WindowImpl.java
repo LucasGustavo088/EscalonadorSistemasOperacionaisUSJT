@@ -114,7 +114,7 @@ public class WindowImpl extends Window {
 
             this.btCarregar.setEnabled(false);
             this.btExecutar.setText("Parar");
-
+            
             this.pnExecucao.start(escalonador, Integer.parseInt(this.txTempo
                             .getText().replace(".", "")));
         } else {
